@@ -10,6 +10,8 @@
 using namespace std;
 using namespace cv;
 
+//#define VISUAL
+
 //投影仪分辨率
 static int PROJECTOR_RESLINE = 1280;
 static int PROJECTOR_RESROW = 720;

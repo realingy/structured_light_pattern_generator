@@ -52,6 +52,7 @@ bool CEncoder_Phase::DrawMat()
 				// 将pix映射到 [0, 2PI)
 				double x = (double)pix / (double)(this->m_pixPeriod) * 2 * CV_PI;
 				// 填充为sin(x), sin(x+pi/3), sin(x-pi/3);
+				// 正弦波，每次相位移位pi/2
 				for (int r = 0; r < this->m_resRow; r++)
 				{
 					this->m_PSMat[0].at<char>(r, pix + T*this->m_pixPeriod) = (sin(x) + 1) * 127;
@@ -96,7 +97,7 @@ bool CEncoder_Phase::WriteData()
 	{
 		std::string tempNum;
 		std::strstream ss;
-		ss << i;
+		ss << m_numMat - i;
 		ss >> tempNum;
 
 		string tempPath = this->m_filePath;
@@ -113,14 +114,14 @@ bool CEncoder_Phase::WriteData()
 	return true;
 }
 
-// 开始构建PhaseShifting。需要传入pixel周期，以及绘制方向。
+// 开始构建PhaseShifting。需要传入pixel周期，以及绘制方向
 bool CEncoder_Phase::Encode(int pixPeriod, bool lineBased)
 {
 	// 判断参数是否合法，并传参。
 	if (pixPeriod <= 0)
 		return false;
 	this->m_pixPeriod = pixPeriod;
-	this->m_lineBased = lineBased;
+	this->m_lineBased = lineBased; //true：列条纹 false：行条纹
 
 	// 绘制
 	if (!this->DrawMat())
@@ -147,6 +148,7 @@ void CEncoder_Phase::Visualization()
 {
 	using namespace cv;
 
+#ifdef VISUAL
 	namedWindow(this->m_matName);
 	for (int i = 0; i < this->m_numMat; i++)
 	{
@@ -155,4 +157,5 @@ void CEncoder_Phase::Visualization()
 		cv::waitKey(400);
 	}
 	destroyWindow(this->m_matName);
+#endif
 }
