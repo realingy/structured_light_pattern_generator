@@ -1,18 +1,18 @@
-% å¤šé¢‘å¤–å·®æ³•ä¹‹ä¸‰é¢‘å››ç›¸ç¨‹åº
-% ç¨‹åºå¼€å§‹
+% ¶àÆµÍâ²î·¨Ö®ÈıÆµËÄÏà³ÌĞò
+% ³ÌĞò¿ªÊ¼
 clc;
 close all;
 clear;
 
-% å›¾ç‰‡çš„åˆå§‹åŒ–
+% Í¼Æ¬µÄ³õÊ¼»¯
 width = 1024;
 heigth = 768;
 
-% ä¸‰é¢‘ç‡
-freq = [70 64 59];  %åƒç´ å•ä½ä¸ºä¸ªæ•°ï¼Œå¯ä»¥çœ‹åšé¢‘ç‡ï¼›æ­£å¼¦å‡½æ•°ä¸ºå‘¨æœŸå«ä¹‰
+% ÈıÆµÂÊ
+freq = [70 64 59];  %ÏñËØµ¥Î»Îª¸öÊı£¬¿ÉÒÔ¿´×öÆµÂÊ£»ÕıÏÒº¯ÊıÎªÖÜÆÚº¬Òå
 
-% åˆ©ç”¨åˆ†å—çŸ©é˜µCå­˜å‚¨3ç»„å…±è®¡12å¼ å›¾
-% ä¸‰ç§é¢‘ç‡ï¼Œå››ç»„ç›¸ä½
+% ÀûÓÃ·Ö¿é¾ØÕóC´æ´¢3×é¹²¼Æ12ÕÅÍ¼
+% ÈıÖÖÆµÂÊ£¬ËÄ×éÏàÎ»
 C = cell(3,4);
 
 for i=1:3
@@ -21,94 +21,96 @@ for i=1:3
     end
 end
 
-% åˆ©ç”¨ä½™å¼¦å‡½æ•°è®¡ç®—12å¼ å›¾çš„ç°åº¦å€¼
-% å›¾åƒçš„ç”Ÿæˆ
-% ä¸‰ç§é¢‘ç‡ï¼Œå››ç»„ç›¸ä½
-for i = 1:3 % å¯¹åº”ä¸‰ç§ä¸åŒçš„é¢‘ç‡
-    for  j = 1:4 % å¯¹åº”å››ç§ç›¸ä½
+% ÀûÓÃÓàÏÒº¯Êı¼ÆËã12ÕÅÍ¼µÄ»Ò¶ÈÖµ
+% Í¼ÏñµÄÉú³É
+% ÈıÖÖÆµÂÊ£¬ËÄ×éÏàÎ»
+for i = 1:3 % ¶ÔÓ¦ÈıÖÖ²»Í¬µÄÆµÂÊ
+    for  j = 1:4 % ¶ÔÓ¦ËÄÖÖÏàÎ»
         for k = 1:width
             C{i,j}(:,k) = 128+127*sin(2*pi*k*freq(i)/width+j*pi/2);
         end
     end
 end
 
-% å¯¹ç°åº¦å€¼è¿›è¡Œå½’ä¸€åŒ–å¤„ç†
+% ¶Ô»Ò¶ÈÖµ½øĞĞ¹éÒ»»¯´¦Àí
 for i = 1:3
     for j = 1:4
         C{i,j} = mat2gray(C{i,j});
     end
 end
 
-% æ˜¾ç¤º12å¼ å›¾
-% for i = 1:3
-%     for j = 1:4
-%         n = 4*(i-1)+j;
-%         h = figure(n);
-%         imshow(C{i,j});
-%     end
-% end
+% ÏÔÊ¾±£´æ12ÕÅÍ¼
+for i = 1:3
+    for j = 1:4
+        % n = 4*(i-1)+j;
+        % h = figure(n);
+        % imshow(C{i,j});
+    filename = ['./pattern/vPhase_',num2str(i-1),'_',num2str(j-1),'.bmp'];
+	imwrite(C{j}, filename); % ±£´æ
+    end
+end
 
-% åˆå§‹åŒ–ä¸‰ç»„å¤„ç†åçš„å›¾ç‰‡ç°åº¦çŸ©é˜µ
-% phiä¹Ÿæ˜¯åˆ†å—çŸ©é˜µ
-% å­˜å‚¨ç›¸ä½ä¸»å€¼å›¾åƒ
+% ³õÊ¼»¯Èı×é´¦ÀíºóµÄÍ¼Æ¬»Ò¶È¾ØÕó
+% phiÒ²ÊÇ·Ö¿é¾ØÕó
+% ´æ´¢ÏàÎ»Ö÷ÖµÍ¼Ïñ
 phi = cell(3,1);
 for i = 1:3
     phi{i,1} = zeros(heigth,width);
 end
 
-% æ±‚å–ç›¸ä½å·®
-% è®¡ç®—æ¯ç§é¢‘ç‡å¯¹åº”çš„ç›¸ä½ä¸»å€¼
-% è¾“å‡ºä¸‰ç§é¢‘ç‡çš„ç›¸ä½ä¸»å€¼ï¼Œç”¨äºç›¸å·®è®¡ç®—
-for i = 1:3 % å¯¹äº3ç»„ä¸­çš„æ¯ä¸€ç»„å›¾ç‰‡ï¼Œæ¯ä¸€ç»„ç›¸åŒé¢‘ç‡çš„æœ‰å››å¼ å›¾ç‰‡
+% ÇóÈ¡ÏàÎ»²î
+% ¼ÆËãÃ¿ÖÖÆµÂÊ¶ÔÓ¦µÄÏàÎ»Ö÷Öµ
+% Êä³öÈıÖÖÆµÂÊµÄÏàÎ»Ö÷Öµ£¬ÓÃÓÚÏà²î¼ÆËã
+for i = 1:3 % ¶ÔÓÚ3×éÖĞµÄÃ¿Ò»×éÍ¼Æ¬£¬Ã¿Ò»×éÏàÍ¬ÆµÂÊµÄÓĞËÄÕÅÍ¼Æ¬
      I1 = C{i,1};
      I2 = C{i,2};
      I3 = C{i,3};
      I4 = C{i,4};
      for g = 1:heigth
         for k = 1:width          
-            if I4(g,k)==I2(g,k)&&I1(g,k)>I3(g,k) %å››ä¸ªç‰¹æ®Šä½ç½®
+            if I4(g,k)==I2(g,k)&&I1(g,k)>I3(g,k) %ËÄ¸öÌØÊâÎ»ÖÃ
                 phi{i,1}(g,k)=0;
-            elseif I4(g,k)==I2(g,k)&&I1(g,k)<I3(g,k) %å››ä¸ªç‰¹æ®Šä½ç½®
+            elseif I4(g,k)==I2(g,k)&&I1(g,k)<I3(g,k) %ËÄ¸öÌØÊâÎ»ÖÃ
                 phi{i,1}(g,k)=pi; 
-            elseif I1(g,k)==I3(g,k)&&I4(g,k)>I2(g,k) %å››ä¸ªç‰¹æ®Šä½ç½®
+            elseif I1(g,k)==I3(g,k)&&I4(g,k)>I2(g,k) %ËÄ¸öÌØÊâÎ»ÖÃ
                 phi{i,1}(g,k)=pi/2;
-            elseif I1(g,k)==I3(g,k)&&I4(g,k)<I2(g,k) %å››ä¸ªç‰¹æ®Šä½ç½®
+            elseif I1(g,k)==I3(g,k)&&I4(g,k)<I2(g,k) %ËÄ¸öÌØÊâÎ»ÖÃ
                 phi{i,1}(g,k)=3*pi/2;
-            elseif I1(g,k)<I3(g,k) %äºŒä¸‰è±¡é™
+            elseif I1(g,k)<I3(g,k) %¶şÈıÏóÏŞ
                 phi{i,1}(g,k)=atan((I4(g,k)-I2(g,k))./(I1(g,k)-I3(g,k)))+pi;
-            elseif I1(g,k)>I3(g,k)&&I4(g,k)>I2(g,k) %ç¬¬ä¸€è±¡é™
+            elseif I1(g,k)>I3(g,k)&&I4(g,k)>I2(g,k) %µÚÒ»ÏóÏŞ
                 phi{i,1}(g,k)=atan((I4(g,k)-I2(g,k))./(I1(g,k)-I3(g,k)));
-            elseif I1(g,k)>I3(g,k)&&I4(g,k)<I2(g,k) %ç¬¬å››è±¡é™
+            elseif I1(g,k)>I3(g,k)&&I4(g,k)<I2(g,k) %µÚËÄÏóÏŞ
                 phi{i,1}(g,k)=atan((I4(g,k)-I2(g,k))./(I1(g,k)-I3(g,k)))+2*pi;  
             end
-          end
+        end
      end
 end
 
-% è®¡ç®—ç›¸å·®
-% ä¿å­˜çŸ©é˜µï¼Œç”¨äºå¤šé¢‘ç›¸å·®çš„è®¡ç®—
-PH1 = phi{1,1};   %é¢‘ç‡1
-PH2 = phi{2,1};   %é¢‘ç‡2
-PH3 = phi{3,1};   %é¢‘ç‡3
+% ¼ÆËãÏà²î
+% ±£´æ¾ØÕó£¬ÓÃÓÚ¶àÆµÏà²îµÄ¼ÆËã
+PH1 = phi{1,1};   %ÆµÂÊ1
+PH2 = phi{2,1};   %ÆµÂÊ2
+PH3 = phi{3,1};   %ÆµÂÊ3
 
-% åˆå§‹åŒ–ç›¸å·®å˜é‡
-% å¤šé¢‘ç›¸å·®
+% ³õÊ¼»¯Ïà²î±äÁ¿
+% ¶àÆµÏà²î
 PH12 = zeros(heigth,width);
 PH23 = zeros(heigth,width);
 PH123 = zeros(heigth,width);
 
-% è®¡ç®—ç›¸å·®
-% ç›¸å·®è®¡ç®—
-% è§£ç›¸
+% ¼ÆËãÏà²î
+% Ïà²î¼ÆËã
+% ½âÏà
 for g = 1:heigth
 	for k = 1:width
-		% è®¡ç®—ç¬¬ä¸€ç»„å’Œç¬¬äºŒç»„çš„ç›¸å·®
+		% ¼ÆËãµÚÒ»×éºÍµÚ¶ş×éµÄÏà²î
 		if PH1(g,k)>PH2(g,k)
 			PH12(g,k) = PH1(g,k)-PH2(g,k);
 		else
 			PH12(g,k) = PH1(g,k)+2*pi-PH2(g,k);
 		end
-		% è®¡ç®—ç¬¬äºŒç»„å’Œç¬¬ä¸‰ç»„çš„ç›¸å·®
+		% ¼ÆËãµÚ¶ş×éºÍµÚÈı×éµÄÏà²î
 		if PH2(g,k)>PH3(g,k)
 			PH23(g,k) = PH2(g,k)-PH3(g,k);
 		else
@@ -118,9 +120,9 @@ for g = 1:heigth
 	end
 end
 
-% è®¡ç®—æœ€ç»ˆç›¸å·®
-% ç›¸å·®å›¾æ¡ˆ
-% ç›¸ä½è§£åŒ…è£¹  ç›¸ä½å±•å¼€
+% ¼ÆËã×îÖÕÏà²î
+% Ïà²îÍ¼°¸
+% ÏàÎ»½â°ü¹ü  ÏàÎ»Õ¹¿ª
 for g = 1:heigth
 	for k = 1:width 
 		if PH12(g,k)>PH23(g,k)
@@ -131,10 +133,16 @@ for g = 1:heigth
 	end
 end
 
-% æ˜¾ç¤º
-figure,imshow(mat2gray(PH12));title('1,2å¤–å·®');   imwrite(mat2gray(PH12),'12å¤–å·®.bmp');
-figure,imshow(mat2gray(PH23));title('2,3å¤–å·®');   imwrite(mat2gray(PH23),'23å¤–å·®.bmp');
-figure,imshow(mat2gray(PH123));title('1,2,3å¤–å·®');imwrite(mat2gray(PH123),'123å¤–å·®.bmp');
-figure,imshow(mat2gray(PH1));title('1ç›¸ä½ä¸»å€¼');  imwrite(mat2gray(PH1),'1ç›¸ä½ä¸»å€¼.bmp');
-figure,imshow(mat2gray(PH2));title('2ç›¸ä½ä¸»å€¼');  imwrite(mat2gray(PH2),'2ç›¸ä½ä¸»å€¼.bmp');
-figure,imshow(mat2gray(PH3));title('3ç›¸ä½ä¸»å€¼');  imwrite(mat2gray(PH3),'3ç›¸ä½ä¸»å€¼.bmp');
+% ÏÔÊ¾
+% figure,imshow(mat2gray(PH12));title('1,2Íâ²î');
+imwrite(mat2gray(PH12), './output/12Íâ²î.bmp');
+% figure,imshow(mat2gray(PH23));title('2,3Íâ²î');
+imwrite(mat2gray(PH23), './output/23Íâ²î.bmp');
+% figure,imshow(mat2gray(PH123));title('1,2,3Íâ²î');
+imwrite(mat2gray(PH123), './output/123Íâ²î.bmp');
+% figure,imshow(mat2gray(PH1));title('1ÏàÎ»Ö÷Öµ');
+imwrite(mat2gray(PH1), './output/1ÏàÎ»Ö÷Öµ.bmp');
+% figure,imshow(mat2gray(PH2));title('2ÏàÎ»Ö÷Öµ');
+imwrite(mat2gray(PH2), './output/2ÏàÎ»Ö÷Öµ.bmp');
+% figure,imshow(mat2gray(PH3));title('3ÏàÎ»Ö÷Öµ');
+imwrite(mat2gray(PH3), './output/3ÏàÎ»Ö÷Öµ.bmp');

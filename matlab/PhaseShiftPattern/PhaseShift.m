@@ -36,7 +36,7 @@ end
 
 % 显示四张图像
 for j = 1:4
-    n = j;
+    % n = j;
 	% h = figure(n);
     % imshow(C{j}); % 显示
     if(true == vertical)
