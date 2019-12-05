@@ -40,9 +40,9 @@ for j = 1:4
 	% h = figure(n);
     % imshow(C{j}); % œ‘ æ
     if(true == vertical)
-        filename = ['./output/vPhase',num2str(j-1),'.bmp'];
+        filename = ['./pattern/vPhase',num2str(j-1),'.bmp'];
     else
-        filename = ['./output/hPhase',num2str(j-1),'.bmp'];
+        filename = ['./pattern/hPhase',num2str(j-1),'.bmp'];
     end
 	imwrite(C{j}, filename); % ±£¥Ê
 end
