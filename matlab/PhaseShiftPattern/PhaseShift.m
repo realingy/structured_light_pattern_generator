@@ -1,12 +1,12 @@
-% function [ phaseShiftPatternSeq ] = PhaseShiftPatternGenerator( freq, width, height, vertical)
+function [ ] = PhaseShift( freq, width, height, vertical)
 
 % 图片的初始化
 % width = 1024;
 % height = 768;
-width = 1280;
-height = 720;
-freq = 32;
-vertical = true;
+% width = 1280;
+% height = 720;
+% freq = 32;
+% vertical = true;
 
 % 利用分块矩阵C存储4张图（4步相位移）
 C = cell(1, 4);
