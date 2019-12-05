@@ -97,7 +97,7 @@ bool CEncoder_Phase::WriteData()
 	{
 		std::string tempNum;
 		std::strstream ss;
-		ss << m_numMat - i;
+		ss << m_numMat - i - 1;
 		ss >> tempNum;
 
 		string tempPath = this->m_filePath;
