@@ -1,10 +1,10 @@
 function [ grayPatternSeq ] = GrayCodePattern4ProjectorCalibration( resolution )
 % input: resolution: the gray pattern img size you want
 
-% col_proj_img_num = ceil(log2(resolution(1)));
-% row_proj_img_num = ceil(log2(resolution(2)));
-col_proj_img_num = 6; % 列pattern张数
-row_proj_img_num = 6; % 行pattern张数
+col_proj_img_num = ceil(log2(resolution(1)));
+row_proj_img_num = ceil(log2(resolution(2)));
+% col_proj_img_num = 6; % 列pattern张数
+% row_proj_img_num = 6; % 行pattern张数
 
 % 生成全白和全黑图
 refferPattern(:, :, 1) = ones(resolution(2), resolution(1));
