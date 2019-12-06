@@ -37,7 +37,8 @@ bool CEncoder_Phase::DrawMat()
 	this->m_PSMat = new Mat[this->m_numMat];
 	for (int i = 0; i < this->m_numMat; i++)
 	{
-		this->m_PSMat[i].create(this->m_resRow, this->m_resLine, CV_8UC1);
+		// this->m_PSMat[i].create(this->m_resRow, this->m_resLine, CV_8UC1);
+		this->m_PSMat[i].create(this->m_resRow, this->m_resLine, CV_32FC1);
 	}
 	
 	// 绘制图像
@@ -55,10 +56,10 @@ bool CEncoder_Phase::DrawMat()
 				// 正弦波，每次相位移位pi/2
 				for (int r = 0; r < this->m_resRow; r++)
 				{
-					this->m_PSMat[0].at<char>(r, pix + T*this->m_pixPeriod) = (sin(x) + 1) * 127;
-					this->m_PSMat[1].at<char>(r, pix + T*this->m_pixPeriod) = (sin(x + CV_PI / 2) + 1) * 127;
-					this->m_PSMat[2].at<char>(r, pix + T*this->m_pixPeriod) = (sin(x + CV_PI) + 1) * 127;
-					this->m_PSMat[3].at<char>(r, pix + T*this->m_pixPeriod) = (sin(x + 3 * CV_PI / 2) + 1) * 127;
+					this->m_PSMat[0].at<float>(r, pix + T * this->m_pixPeriod) = (sin(x) + 1) * 127.0;
+					this->m_PSMat[1].at<float>(r, pix + T * this->m_pixPeriod) = (sin(x + CV_PI / 2) + 1) * 127.0;
+					this->m_PSMat[2].at<float>(r, pix + T * this->m_pixPeriod) = (sin(x + CV_PI) + 1) * 127.0;
+					this->m_PSMat[3].at<float>(r, pix + T * this->m_pixPeriod) = (sin(x + 3 * CV_PI / 2) + 1) * 127.0;
 				}
 			}
 		}
@@ -76,10 +77,10 @@ bool CEncoder_Phase::DrawMat()
 				// 填充为sin(x), sin(x+pi/3), sin(x-pi/3);
 				for (int l = 0; l < this->m_resLine; l++)
 				{
-					this->m_PSMat[0].at<char>(pix + T*this->m_pixPeriod, l) = (sin(x) + 1) * 127;
-					this->m_PSMat[1].at<char>(pix + T*this->m_pixPeriod, l) = (sin(x + CV_PI / 2) + 1) * 127;
-					this->m_PSMat[2].at<char>(pix + T*this->m_pixPeriod, l) = (sin(x + CV_PI) + 1) * 127;
-					this->m_PSMat[3].at<char>(pix + T*this->m_pixPeriod, l) = (sin(x + 3 * CV_PI / 2) + 1) * 127;
+					this->m_PSMat[0].at<float>(pix + T * this->m_pixPeriod, l) = (sin(x) + 1) * 127.0;
+					this->m_PSMat[1].at<float>(pix + T * this->m_pixPeriod, l) = (sin(x + CV_PI / 2) + 1) * 127.0;
+					this->m_PSMat[2].at<float>(pix + T * this->m_pixPeriod, l) = (sin(x + CV_PI) + 1) * 127.0;
+					this->m_PSMat[3].at<float>(pix + T * this->m_pixPeriod, l) = (sin(x + 3 * CV_PI / 2) + 1) * 127.0;
 				}
 			}
 		}
@@ -134,7 +135,7 @@ bool CEncoder_Phase::Encode(int pixPeriod, bool lineBased)
 	return true;
 }
 
-// 设定存储格雷码图案的文件名
+// 设定存储相位移图案的文件名
 bool CEncoder_Phase::SetMatFileName(string filePath, string matName, string matEnd)
 {
 	this->m_filePath = filePath;
