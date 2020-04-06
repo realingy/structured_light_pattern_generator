@@ -265,3 +265,4 @@ void CEncoder_Gray::Visualization()
 #endif
 }
 
+
