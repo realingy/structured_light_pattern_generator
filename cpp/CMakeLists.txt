@@ -2,7 +2,6 @@ cmake_minimum_required( VERSION 2.8)
 
 project(structured_light_pattern_generator)
 
-# opencv
 set(OpenCV_DIR $ENV{OPENCV_DIR})
 find_package(OpenCV REQUIRED)
 
