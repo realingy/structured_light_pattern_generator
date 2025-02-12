@@ -2,7 +2,7 @@
 
 using namespace std;
 
-#if 0
+#if 1
 CEncoder_Gray::CEncoder_Gray() {
   this->numDigit = 0;
   this->grayCode = NULL;

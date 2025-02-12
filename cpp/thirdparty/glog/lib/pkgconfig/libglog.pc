@@ -1,0 +1,10 @@
+prefix=D:/runners/builds/_xL5QZgx/0/DeepLearningGroup/deepinspectsdk/build_gpu_RelWithDebInfo/ExternalProject/glog
+exec_prefix=D:/runners/builds/_xL5QZgx/0/DeepLearningGroup/deepinspectsdk/build_gpu_RelWithDebInfo/ExternalProject/glog/bin
+libdir=D:/runners/builds/_xL5QZgx/0/DeepLearningGroup/deepinspectsdk/build_gpu_RelWithDebInfo/ExternalProject/glog/lib
+includedir=D:/runners/builds/_xL5QZgx/0/DeepLearningGroup/deepinspectsdk/build_gpu_RelWithDebInfo/ExternalProject/glog/include
+
+Name: libglog
+Description: Google Log (glog) C++ logging framework
+Version: 0.5.0
+Libs: -L${libdir} -lglog
+Cflags: -I${includedir}

@@ -2,7 +2,7 @@
 
 int main() {
   return 0;
-#if 0
+#if 1
   // 格雷码进行编码
   CEncoder_Gray EGray_v, EGray_h;
   EGray_v.SetCodeFileName("vGrayCode", ".txt");

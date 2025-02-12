@@ -1,6 +1,6 @@
 #include "head.h"
 
-#if 0
+#if 1
 CEncoder_Phase::CEncoder_Phase() {
   this->m_pixPeriod = 0;
   this->m_numMat = 0;

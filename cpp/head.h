@@ -1,7 +1,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
-// #include <opencv2/opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <strstream>
 
 // #define VISUAL
@@ -10,7 +10,7 @@
 static int PROJECTOR_RESLINE = 1280;
 static int PROJECTOR_RESROW = 720;
 
-#if 0
+#if 1
 // 格雷码生成。
 // 生成位数最多为16位。即使用short类型存储格雷码
 class CEncoder_Gray {
