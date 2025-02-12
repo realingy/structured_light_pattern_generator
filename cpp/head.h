@@ -1,77 +1,79 @@
-// C++Ïà¹Ø
-#include <iostream>
-#include <fstream>
-#include <strstream>
 #include <cmath>
+#include <fstream>
+#include <iostream>
+// #include <opencv2/opencv.hpp>
+#include <strstream>
 
-// OpenCV
-#include <opencv2/highgui.hpp>
+// #define VISUAL
 
-using namespace std;
-using namespace cv;
-
-//#define VISUAL
-
-//Í¶Ó°ÒÇ·Ö±æÂÊ
+// æŠ•å½±ä»ªåˆ†è¾¨ç‡
 static int PROJECTOR_RESLINE = 1280;
 static int PROJECTOR_RESROW = 720;
 
-// ¸ñÀ×ÂëÉú³É¡£
-// Éú³ÉÎ»Êı×î¶àÎª16Î»¡£¼´Ê¹ÓÃshortÀàĞÍ´æ´¢¸ñÀ×Âë
-class CEncoder_Gray
-{
-private:
-	int numDigit;			// Î»Êı
-	int grayCodeSize;		// ×Ü¹²µÄ¸ñÀ×ÂëÊıÄ¿
-	short *grayCode;		// ¸ñÀ×Âë
-	Mat *grayCodeMat;		// ¸ñÀ×Âë¶ÔÓ¦µÄÍ¼Ïñ
-	int resRow;				// Í¼ÏñµÄĞĞ·Ö±æÂÊ
-	int resLine;			// Í¼ÏñµÄÁĞ·Ö±æÂÊ
-	bool lineBased;			// ÊÇ·ñ°´ÕÕÁĞÀ´»æÖÆ
+#if 0
+// æ ¼é›·ç ç”Ÿæˆã€‚
+// ç”Ÿæˆä½æ•°æœ€å¤šä¸º16ä½ã€‚å³ä½¿ç”¨shortç±»å‹å­˜å‚¨æ ¼é›·ç 
+class CEncoder_Gray {
+ private:
+  int numDigit;          // ä½æ•°
+  int grayCodeSize;      // æ€»å…±çš„æ ¼é›·ç æ•°ç›®
+  short *grayCode;       // æ ¼é›·ç 
+  cv::Mat *grayCodeMat;  // æ ¼é›·ç å¯¹åº”çš„å›¾åƒ
+  int resRow;            // å›¾åƒçš„è¡Œåˆ†è¾¨ç‡
+  int resLine;           // å›¾åƒçš„åˆ—åˆ†è¾¨ç‡
+  bool lineBased;        // æ˜¯å¦æŒ‰ç…§åˆ—æ¥ç»˜åˆ¶
 
-	string m_filePath;		// ´æ´¢Â·¾¶Ãû
-	string m_codeName;		// ¸ñÀ×ÂëÎÄ¼şÃû
-	string m_codeEnd;		// ¸ñÀ×Âëºó×ºÃû
-	string m_matName;		// Í¼ÏñÃû
-	string m_matEnd;		// Í¼Ïñºó×ºÃû
+  std::string m_filePath;  // å­˜å‚¨è·¯å¾„å
+  std::string m_codeName;  // æ ¼é›·ç æ–‡ä»¶å
+  std::string m_codeEnd;   // æ ¼é›·ç åç¼€å
+  std::string m_matName;   // å›¾åƒå
+  std::string m_matEnd;    // å›¾åƒåç¼€å
 
-	bool GetBit(short Code, int n);		// »ñÈ¡CodeÖĞµÄÓÒÆğµÚnÎ»¡£n´Ó1¿ªÊ¼¡£
-	bool EncodeGray();					// ¹¹½¨numDigitÎ»µÄGrayCode²¢´æ´¢¡£
-	bool DrawMat();						// ¸ù¾İ¸ñÀ×ÂëÄÚÈİ£¬»æÖÆ¸ñÀ×ÂëÍ¼Ïñ
-	bool WriteData();					// Êä³öµ½ÎÄ¼ş
+  bool GetBit(short Code, int n);  // è·å–Codeä¸­çš„å³èµ·ç¬¬nä½ã€‚nä»1å¼€å§‹ã€‚
+  bool EncodeGray();               // æ„å»ºnumDigitä½çš„GrayCodeå¹¶å­˜å‚¨ã€‚
+  bool DrawMat();    // æ ¹æ®æ ¼é›·ç å†…å®¹ï¼Œç»˜åˆ¶æ ¼é›·ç å›¾åƒ
+  bool WriteData();  // è¾“å‡ºåˆ°æ–‡ä»¶
 
-public:
-	CEncoder_Gray();										// ¹¹Ôìº¯Êı¡£
-	~CEncoder_Gray();										// Îö¹¹º¯Êı¡£É¾³ı·ÖÅäµÄÏà¹Ø¿Õ¼ä¡£
-	bool Encode(int numDigit, bool lineBased);				// ¿ªÊ¼¹¹½¨GrayCode¡£ĞèÒª´«Èë¾ßÌåµÄÎ»Êı¡£
-	bool SetCodeFileName(string codeName, string codeEnd);	// Éè¶¨´æ´¢ÎÄ¼şÃû
-	bool SetMatFileName(string filePath, string matName, string matEnd);
-	void Visualization();
+ public:
+  CEncoder_Gray();
+  ~CEncoder_Gray();
+
+  // å¼€å§‹æ„å»ºGrayCodeã€‚éœ€è¦ä¼ å…¥å…·ä½“çš„ä½æ•°ã€‚
+  bool Encode(int numDigit, bool lineBased);
+
+  // è®¾å®šå­˜å‚¨æ–‡ä»¶å
+  bool SetCodeFileName(std::string codeName, std::string codeEnd);
+
+  bool SetMatFileName(std::string filePath, std::string matName,
+                      std::string matEnd);
+
+  void Visualization();
 };
 
-// PhaseShiftingÉú³É
-class CEncoder_Phase
-{
-private:
-	int m_numMat;			// MatÊıÄ¿
-	int m_pixPeriod;		// Ã¿ÖÜÆÚµÄpixÊıÄ¿
-	cv::Mat * m_PSMat;		// phaseshifting¶ÔÓ¦µÄÍ¼Ïñ
+// PhaseShiftingç”Ÿæˆ
+class CEncoder_Phase {
+ private:
+  int m_numMat;      // Matæ•°ç›®
+  int m_pixPeriod;   // æ¯å‘¨æœŸçš„pixæ•°ç›®
+  cv::Mat *m_PSMat;  // phaseshiftingå¯¹åº”çš„å›¾åƒ
 
-	int m_resRow;			// Í¼ÏñµÄĞĞ·Ö±æÂÊ
-	int m_resLine;			// Í¼ÏñµÄÁĞ·Ö±æÂÊ
-	bool m_lineBased;		// ÊÇ·ñ°´ÕÕÁĞÀ´»æÖÆ
+  int m_resRow;      // å›¾åƒçš„è¡Œåˆ†è¾¨ç‡
+  int m_resLine;     // å›¾åƒçš„åˆ—åˆ†è¾¨ç‡
+  bool m_lineBased;  // æ˜¯å¦æŒ‰ç…§åˆ—æ¥ç»˜åˆ¶
 
-	string m_filePath;		// ´æ´¢Â·¾¶Ãû
-	string m_matName;		// Í¼ÏñÃû
-	string m_matEnd;		// Í¼Ïñºó×ºÃû
+  std::string m_filePath;  // å­˜å‚¨è·¯å¾„å
+  std::string m_matName;   // å›¾åƒå
+  std::string m_matEnd;    // å›¾åƒåç¼€å
 
-	bool DrawMat();			// ¸ù¾İPSÄÚÈİ£¬»æÖÆÍ¼Ïñ
-	bool WriteData();		// Êä³öµ½ÎÄ¼ş
+  bool DrawMat();    // æ ¹æ®PSå†…å®¹ï¼Œç»˜åˆ¶å›¾åƒ
+  bool WriteData();  // è¾“å‡ºåˆ°æ–‡ä»¶
 
-public:
-	CEncoder_Phase();
-	~CEncoder_Phase();
-	bool Encode(int pixPeriod, bool lineBased);
-	bool SetMatFileName(string filePath, string matName, string matEnd);
-	void Visualization();
+ public:
+  CEncoder_Phase();
+  ~CEncoder_Phase();
+  bool Encode(int pixPeriod, bool lineBased);
+  bool SetMatFileName(std::string filePath, std::string matName,
+                      std::string matEnd);
+  void Visualization();
 };
+#endif

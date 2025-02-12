@@ -1,17 +1,37 @@
-cmake_minimum_required( VERSION 2.8)
+cmake_minimum_required( VERSION 3.5)
 
 project(structured_light_pattern_generator)
 
-set(OpenCV_DIR $ENV{OPENCV_DIR})
-find_package(OpenCV REQUIRED)
+# include_directories(${CMAKE_SOURCE_DIR}/..)
 
-include_directories(${OpenCV_DIR}/include)
-include_directories(${OpenCV_DIR}/include/opencv)
-include_directories(${OpenCV_DIR}/include/opencv2)
+set(CMAKE_CONFIGRATION_TYPES "Release" CACHE STRING "" FORCE)
 
-aux_source_directory(. DIR_SRCS)
-FILE(GLOB HEADER ./*.h)
+#add_definitions( -D_HAS_EXCEPTIONS=0 )
 
-set(EXENAME1 structured_light_pattern_generator)
-add_executable(${EXENAME1} ${DIR_SRCS} ${HEADER})
-target_link_libraries(${EXENAME1} ${OpenCV_LIBS})
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTORCC ON)
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+# 设置头文件目录
+include_directories(thirdparty/glog/include)
+include_directories(thirdparty/opencv/include)
+# include_directories(thirdparty/dsStream/include)
+ 
+# 设置静态库目录
+link_directories(thirdparty/glog/lib)
+link_directories(thirdparty/opencv/lib)
+# link_directories(thirdparty/dsStream/lib)
+
+set(EXENAME PatternGenerator)
+add_executable(${EXENAME}  
+    head.h
+    main.cpp
+    EncoderGray.cpp
+    EncoderPS.cpp
+)
+target_link_libraries(${EXENAME} 
+    glog
+    opencv_world401
+)

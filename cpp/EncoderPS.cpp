@@ -1,162 +1,149 @@
 #include "head.h"
 
-// ¹¹Ôìº¯Êı¡£
-CEncoder_Phase::CEncoder_Phase()
-{
-	this->m_pixPeriod = 0;
-	this->m_numMat = 0;
-	this->m_PSMat = NULL;
+#if 0
+CEncoder_Phase::CEncoder_Phase() {
+  this->m_pixPeriod = 0;
+  this->m_numMat = 0;
+  this->m_PSMat = NULL;
 
-	this->m_resRow = PROJECTOR_RESROW;
-	this->m_resLine = PROJECTOR_RESLINE;
-	this->m_lineBased = true;
-	
-	this->m_filePath = "/";
-	this->m_matName = "Phase";
-	this->m_matEnd = ".bmp";
+  this->m_resRow = PROJECTOR_RESROW;
+  this->m_resLine = PROJECTOR_RESLINE;
+  this->m_lineBased = true;
+
+  this->m_filePath = "/";
+  this->m_matName = "Phase";
+  this->m_matEnd = ".bmp";
 }
 
-// Îö¹¹º¯Êı¡£É¾³ı·ÖÅäµÄÏà¹Ø¿Õ¼ä¡£
-CEncoder_Phase::~CEncoder_Phase()
-{
-	// É¾³ım_PSMat
-	if (this->m_PSMat != NULL)
-	{
-		delete[](this->m_PSMat);
-		this->m_PSMat = NULL;
-	}
+// ææ„å‡½æ•°ã€‚åˆ é™¤åˆ†é…çš„ç›¸å…³ç©ºé—´ã€‚
+CEncoder_Phase::~CEncoder_Phase() {
+  // åˆ é™¤m_PSMat
+  if (this->m_PSMat != NULL) {
+    delete[](this->m_PSMat);
+    this->m_PSMat = NULL;
+  }
 }
 
-// ¸ù¾İPSÄÚÈİ£¬»æÖÆÍ¼Ïñ
-bool CEncoder_Phase::DrawMat()
-{
-	using namespace cv;
-	
-	// ´´½¨Í¼Ïñ
-	this->m_numMat = 4;
-	this->m_PSMat = new Mat[this->m_numMat];
-	for (int i = 0; i < this->m_numMat; i++)
-	{
-		// this->m_PSMat[i].create(this->m_resRow, this->m_resLine, CV_8UC1);
-		this->m_PSMat[i].create(this->m_resRow, this->m_resLine, CV_32FC1);
-	}
-	
-	// »æÖÆÍ¼Ïñ
-	if (this->m_lineBased)
-	{
-		// ¼ÆËã×ÜÖÜÆÚÊı£¬²¢°´ÖÜÆÚ»æÖÆ
-		int numPeriod = this->m_resLine / this->m_pixPeriod;
-		for (int T = 0; T < numPeriod; T++)
-		{
-			for (int pix = 0; pix < this->m_pixPeriod; pix++)
-			{
-				// ½«pixÓ³Éäµ½ [0, 2PI)
-				double x = (double)pix / (double)(this->m_pixPeriod) * 2 * CV_PI;
-				// Ìî³äÎªsin(x), sin(x+pi/3), sin(x-pi/3);
-				// ÕıÏÒ²¨£¬Ã¿´ÎÏàÎ»ÒÆÎ»pi/2
-				for (int r = 0; r < this->m_resRow; r++)
-				{
-					this->m_PSMat[0].at<float>(r, pix + T * this->m_pixPeriod) = (sin(x) + 1) * 127.0;
-					this->m_PSMat[1].at<float>(r, pix + T * this->m_pixPeriod) = (sin(x + CV_PI / 2) + 1) * 127.0;
-					this->m_PSMat[2].at<float>(r, pix + T * this->m_pixPeriod) = (sin(x + CV_PI) + 1) * 127.0;
-					this->m_PSMat[3].at<float>(r, pix + T * this->m_pixPeriod) = (sin(x + 3 * CV_PI / 2) + 1) * 127.0;
-				}
-			}
-		}
-	}
-	else
-	{
-		// ¼ÆËã×ÜÖÜÆÚÊı£¬²¢°´ÖÜÆÚ»æÖÆ
-		int numPeriod = this->m_resRow / this->m_pixPeriod;
-		for (int T = 0; T < numPeriod; T++)
-		{
-			for (int pix = 0; pix < this->m_pixPeriod; pix++)
-			{
-				// ½«pixÓ³Éäµ½£¨0, 2PI£©
-				double x = (double)pix / (double)(this->m_pixPeriod) * 2 * CV_PI;
-				// Ìî³äÎªsin(x), sin(x+pi/3), sin(x-pi/3);
-				for (int l = 0; l < this->m_resLine; l++)
-				{
-					this->m_PSMat[0].at<float>(pix + T * this->m_pixPeriod, l) = (sin(x) + 1) * 127.0;
-					this->m_PSMat[1].at<float>(pix + T * this->m_pixPeriod, l) = (sin(x + CV_PI / 2) + 1) * 127.0;
-					this->m_PSMat[2].at<float>(pix + T * this->m_pixPeriod, l) = (sin(x + CV_PI) + 1) * 127.0;
-					this->m_PSMat[3].at<float>(pix + T * this->m_pixPeriod, l) = (sin(x + 3 * CV_PI / 2) + 1) * 127.0;
-				}
-			}
-		}
-	}
+// æ ¹æ®PSå†…å®¹ï¼Œç»˜åˆ¶å›¾åƒ
+bool CEncoder_Phase::DrawMat() {
+  using namespace cv;
 
-	return true;
+  // åˆ›å»ºå›¾åƒ
+  this->m_numMat = 4;
+  this->m_PSMat = new Mat[this->m_numMat];
+  for (int i = 0; i < this->m_numMat; i++) {
+    // this->m_PSMat[i].create(this->m_resRow, this->m_resLine, CV_8UC1);
+    this->m_PSMat[i].create(this->m_resRow, this->m_resLine, CV_32FC1);
+  }
+
+  // ç»˜åˆ¶å›¾åƒ
+  if (this->m_lineBased) {
+    // è®¡ç®—æ€»å‘¨æœŸæ•°ï¼Œå¹¶æŒ‰å‘¨æœŸç»˜åˆ¶
+    int numPeriod = this->m_resLine / this->m_pixPeriod;
+    for (int T = 0; T < numPeriod; T++) {
+      for (int pix = 0; pix < this->m_pixPeriod; pix++) {
+        // å°†pixæ˜ å°„åˆ° [0, 2PI)
+        double x = (double)pix / (double)(this->m_pixPeriod) * 2 * CV_PI;
+        // å¡«å……ä¸ºsin(x), sin(x+pi/3), sin(x-pi/3);
+        // æ­£å¼¦æ³¢ï¼Œæ¯æ¬¡ç›¸ä½ç§»ä½pi/2
+        for (int r = 0; r < this->m_resRow; r++) {
+          this->m_PSMat[0].at<float>(r, pix + T * this->m_pixPeriod) =
+              (sin(x) + 1) * 127.0;
+          this->m_PSMat[1].at<float>(r, pix + T * this->m_pixPeriod) =
+              (sin(x + CV_PI / 2) + 1) * 127.0;
+          this->m_PSMat[2].at<float>(r, pix + T * this->m_pixPeriod) =
+              (sin(x + CV_PI) + 1) * 127.0;
+          this->m_PSMat[3].at<float>(r, pix + T * this->m_pixPeriod) =
+              (sin(x + 3 * CV_PI / 2) + 1) * 127.0;
+        }
+      }
+    }
+  } else {
+    // è®¡ç®—æ€»å‘¨æœŸæ•°ï¼Œå¹¶æŒ‰å‘¨æœŸç»˜åˆ¶
+    int numPeriod = this->m_resRow / this->m_pixPeriod;
+    for (int T = 0; T < numPeriod; T++) {
+      for (int pix = 0; pix < this->m_pixPeriod; pix++) {
+        // å°†pixæ˜ å°„åˆ°ï¼ˆ0, 2PIï¼‰
+        double x = (double)pix / (double)(this->m_pixPeriod) * 2 * CV_PI;
+        // å¡«å……ä¸ºsin(x), sin(x+pi/3), sin(x-pi/3);
+        for (int l = 0; l < this->m_resLine; l++) {
+          this->m_PSMat[0].at<float>(pix + T * this->m_pixPeriod, l) =
+              (sin(x) + 1) * 127.0;
+          this->m_PSMat[1].at<float>(pix + T * this->m_pixPeriod, l) =
+              (sin(x + CV_PI / 2) + 1) * 127.0;
+          this->m_PSMat[2].at<float>(pix + T * this->m_pixPeriod, l) =
+              (sin(x + CV_PI) + 1) * 127.0;
+          this->m_PSMat[3].at<float>(pix + T * this->m_pixPeriod, l) =
+              (sin(x + 3 * CV_PI / 2) + 1) * 127.0;
+        }
+      }
+    }
+  }
+
+  return true;
 }
 
-// Êä³öµ½ÎÄ¼ş
-bool CEncoder_Phase::WriteData()
-{
-	using namespace cv;
-	
-	for (int i = 0; i < this->m_numMat; i++)
-	{
-		std::string tempNum;
-		std::strstream ss;
-		ss << m_numMat - i - 1;
-		ss >> tempNum;
+// è¾“å‡ºåˆ°æ–‡ä»¶
+bool CEncoder_Phase::WriteData() {
+  using namespace cv;
 
-		string tempPath = this->m_filePath;
-		for (int i = 0; i < tempPath.length(); i++)
-		{
-			if (tempPath[i] == '/')
-				tempPath[i] = '\\';
-		}
-		system((string("mkdir ") + tempPath).c_str());
+  for (int i = 0; i < this->m_numMat; i++) {
+    std::string tempNum;
+    std::strstream ss;
+    ss << m_numMat - i - 1;
+    ss >> tempNum;
 
-		cv::imwrite(this->m_filePath + this->m_matName + tempNum + this->m_matEnd, this->m_PSMat[i]);
-	}
+    std::string tempPath = this->m_filePath;
+    for (int i = 0; i < tempPath.length(); i++) {
+      if (tempPath[i] == '/') tempPath[i] = '\\';
+    }
+    system((std::string("mkdir ") + tempPath).c_str());
 
-	return true;
+    cv::imwrite(this->m_filePath + this->m_matName + tempNum + this->m_matEnd,
+                this->m_PSMat[i]);
+  }
+
+  return true;
 }
 
-// ¿ªÊ¼¹¹½¨PhaseShifting¡£ĞèÒª´«ÈëpixelÖÜÆÚ£¬ÒÔ¼°»æÖÆ·½Ïò
-bool CEncoder_Phase::Encode(int pixPeriod, bool lineBased)
-{
-	// ÅĞ¶Ï²ÎÊıÊÇ·ñºÏ·¨£¬²¢´«²Î¡£
-	if (pixPeriod <= 0)
-		return false;
-	this->m_pixPeriod = pixPeriod;
-	this->m_lineBased = lineBased; //true£ºÁĞÌõÎÆ false£ºĞĞÌõÎÆ
+// å¼€å§‹æ„å»ºPhaseShiftingã€‚éœ€è¦ä¼ å…¥pixelå‘¨æœŸï¼Œä»¥åŠç»˜åˆ¶æ–¹å‘
+bool CEncoder_Phase::Encode(int pixPeriod, bool lineBased) {
+  // åˆ¤æ–­å‚æ•°æ˜¯å¦åˆæ³•ï¼Œå¹¶ä¼ å‚ã€‚
+  if (pixPeriod <= 0) return false;
+  this->m_pixPeriod = pixPeriod;
+  this->m_lineBased = lineBased;  // trueï¼šåˆ—æ¡çº¹ falseï¼šè¡Œæ¡çº¹
 
-	// »æÖÆ
-	if (!this->DrawMat())
-		return false;
+  // ç»˜åˆ¶
+  if (!this->DrawMat()) return false;
 
-	// ±£´æ
-	if (!this->WriteData())
-		return false;
+  // ä¿å­˜
+  if (!this->WriteData()) return false;
 
-	return true;
+  return true;
 }
 
-// Éè¶¨´æ´¢ÏàÎ»ÒÆÍ¼°¸µÄÎÄ¼şÃû
-bool CEncoder_Phase::SetMatFileName(string filePath, string matName, string matEnd)
-{
-	this->m_filePath = filePath;
-	this->m_matName = matName;
-	this->m_matEnd = matEnd;
-	return true;
+// è®¾å®šå­˜å‚¨ç›¸ä½ç§»å›¾æ¡ˆçš„æ–‡ä»¶å
+bool CEncoder_Phase::SetMatFileName(std::string filePath, std::string matName,
+                                    std::string matEnd) {
+  this->m_filePath = filePath;
+  this->m_matName = matName;
+  this->m_matEnd = matEnd;
+  return true;
 }
 
-// ¿ÉÊÓ»¯
-void CEncoder_Phase::Visualization()
-{
-	using namespace cv;
+// å¯è§†åŒ–
+void CEncoder_Phase::Visualization() {
+  using namespace cv;
 
 #ifdef VISUAL
-	namedWindow(this->m_matName);
-	for (int i = 0; i < this->m_numMat; i++)
-	{
-		std::cout << "Now present: " << i << std::endl;
-		imshow(this->m_matName, this->m_PSMat[i]);
-		cv::waitKey(400);
-	}
-	destroyWindow(this->m_matName);
+  namedWindow(this->m_matName);
+  for (int i = 0; i < this->m_numMat; i++) {
+    std::cout << "Now present: " << i << std::endl;
+    imshow(this->m_matName, this->m_PSMat[i]);
+    cv::waitKey(400);
+  }
+  destroyWindow(this->m_matName);
 #endif
 }
+
+#endif

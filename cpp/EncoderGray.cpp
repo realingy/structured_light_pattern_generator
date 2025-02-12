@@ -2,267 +2,228 @@
 
 using namespace std;
 
-// ¹¹Ôìº¯Êı
-CEncoder_Gray::CEncoder_Gray()
-{
-	this->numDigit = 0;
-	this->grayCode = NULL;
-	this->grayCodeMat = NULL;
-	this->resRow = PROJECTOR_RESROW;
-	this->resLine = PROJECTOR_RESLINE;
-	this->lineBased = true;
+#if 0
+CEncoder_Gray::CEncoder_Gray() {
+  this->numDigit = 0;
+  this->grayCode = NULL;
+  this->grayCodeMat = NULL;
+  this->resRow = PROJECTOR_RESROW;
+  this->resLine = PROJECTOR_RESLINE;
+  this->lineBased = true;
 
-	this->m_filePath = "/";
-	this->m_codeName = "GrayCode";
-	this->m_codeEnd = ".txt";
-	this->m_matName = "Gray";
-	this->m_matEnd = ".bmp";
+  this->m_filePath = "/";
+  this->m_codeName = "GrayCode";
+  this->m_codeEnd = ".txt";
+  this->m_matName = "Gray";
+  this->m_matEnd = ".bmp";
 }
 
-// Îö¹¹º¯Êı£¬É¾³ı·ÖÅäµÄÏà¹Ø¿Õ¼ä
-CEncoder_Gray::~CEncoder_Gray()
-{
-	// É¾³ıGrayCode
-	if (this->grayCode != NULL)
-	{
-		delete[](this->grayCode);
-		this->grayCode = NULL;
-	}
-	
-	// É¾³ıGrayCodeMat
-	if (this->grayCodeMat != NULL)
-	{
-		delete[](this->grayCodeMat);
-		this->grayCodeMat = NULL;
-	}
+CEncoder_Gray::~CEncoder_Gray() {
+  if (this->grayCode != NULL) {
+    delete[](this->grayCode);
+    this->grayCode = NULL;
+  }
+
+  if (this->grayCodeMat != NULL) {
+    delete[](this->grayCodeMat);
+    this->grayCodeMat = NULL;
+  }
 }
 
-// »ñÈ¡CodeÖĞµÄÓÒÆğµÚnÎ»£¬n´Ó1¿ªÊ¼
-bool CEncoder_Gray::GetBit(short Code, int n)
-{
-	bool res = (Code >> (n - 1)) & 0x0001;
-	return res;
+// è·å–Codeä¸­çš„å³èµ·ç¬¬nä½ï¼Œnä»1å¼€å§‹
+bool CEncoder_Gray::GetBit(short Code, int n) {
+  bool res = (Code >> (n - 1)) & 0x0001;
+  return res;
 }
 
-// ¹¹½¨numDigitÎ»µÄGrayCode²¢´æ´¢
-bool CEncoder_Gray::EncodeGray()
-{
-	// ´´½¨¸ñÀ×Âë¿Õ¼ä²¢³õÊ¼»¯
-	this->grayCode = new short[this->grayCodeSize]; //64
+// æ„å»ºnumDigitä½çš„GrayCodeå¹¶å­˜å‚¨
+bool CEncoder_Gray::EncodeGray() {
+  // åˆ›å»ºæ ¼é›·ç ç©ºé—´å¹¶åˆå§‹åŒ–
+  this->grayCode = new short[this->grayCodeSize];  // 64
 
-	// ¿ªÊ¼Ñ­»·Ìî³ä
-	this->grayCode[0] = 0x0000;		// ¶ÔµÚÒ»¸öÌî³äÈ«0
-	this->grayCode[1] = 0x0001;		// ¸Ä±ä×îÓÒ¶ËµÄÖµ
-	for (int i = 2; i < this->grayCodeSize; i += 2)
-	{
-		// ¶ÔGrayCode[i]: Ê×ÏÈ£¬ÕÒµ½ÓÒ±ßµÚÒ»¸öÎª1µÄÊı
-		int k = 1;
-		while (true)
-		{
-			if (this->GetBit(this->grayCode[i - 1], k))
-				break;
-			k++;
-		}
-		if (k >= 16)	return false;
-		// ¶ÔGrayCode[i]: È»ºó£¬¸Ä±äÕâ¸öÊı×ó±ßÒ»Î»µÄÖµ
-		short Cover = 0x0001 << k;
-		grayCode[i] = grayCode[i - 1] ^ Cover;
+  // å¼€å§‹å¾ªç¯å¡«å……
+  this->grayCode[0] = 0x0000;  // å¯¹ç¬¬ä¸€ä¸ªå¡«å……å…¨0
+  this->grayCode[1] = 0x0001;  // æ”¹å˜æœ€å³ç«¯çš„å€¼
+  for (int i = 2; i < this->grayCodeSize; i += 2) {
+    // å¯¹GrayCode[i]: é¦–å…ˆï¼Œæ‰¾åˆ°å³è¾¹ç¬¬ä¸€ä¸ªä¸º1çš„æ•°
+    int k = 1;
+    while (true) {
+      if (this->GetBit(this->grayCode[i - 1], k)) break;
+      k++;
+    }
+    if (k >= 16) return false;
+    // å¯¹GrayCode[i]: ç„¶åï¼Œæ”¹å˜è¿™ä¸ªæ•°å·¦è¾¹ä¸€ä½çš„å€¼
+    short Cover = 0x0001 << k;
+    grayCode[i] = grayCode[i - 1] ^ Cover;
 
-		// ¶ÔGrayCode[i+1]£º¸Ä±ä×îÓÒ¶ËµÄÖµ
-		grayCode[i + 1] = grayCode[i] ^ 0x0001;
-	}
+    // å¯¹GrayCode[i+1]ï¼šæ”¹å˜æœ€å³ç«¯çš„å€¼
+    grayCode[i + 1] = grayCode[i] ^ 0x0001;
+  }
 
-	// Öğ¸öÏÔÊ¾¸ñÀ×Âë
-	/*
-	for (int i = 0; i < this->grayCodeSize; i++)
-	{
-		std::cout << "==> " << i << " :: " << grayCode[i] << std::endl;
-	}
-	*/
+  // é€ä¸ªæ˜¾ç¤ºæ ¼é›·ç 
+  /*
+  for (int i = 0; i < this->grayCodeSize; i++)
+  {
+          std::cout << "==> " << i << " :: " << grayCode[i] << std::endl;
+  }
+  */
 
-	return true;
+  return true;
 }
 
-// ¸ù¾İ¸ñÀ×ÂëÄÚÈİ£¬»æÖÆ¸ñÀ×ÂëÍ¼Ïñ
-bool CEncoder_Gray::DrawMat()
-{
-	// ´´½¨numDigit*2¸öÍ¼Ïñ
-	this->grayCodeMat = new cv::Mat[this->numDigit*2];
+// æ ¹æ®æ ¼é›·ç å†…å®¹ï¼Œç»˜åˆ¶æ ¼é›·ç å›¾åƒ
+bool CEncoder_Gray::DrawMat() {
+  // åˆ›å»ºnumDigit*2ä¸ªå›¾åƒ
+  this->grayCodeMat = new cv::Mat[this->numDigit * 2];
 
-	// »æÖÆÃ¿Ò»¸öÍ¼Ïñ¡£picIdx´ú±í»æÖÆµÄÊÇ¸ñÀ×ÂëµÄµÚpicIdx / 2Î»¡£Ò²´ú±íµÚ¼¸·ù¾ØÕó
-	for (int picIdx = 0; picIdx < this->numDigit * 2; picIdx += 2)
-	{
-		// ´´½¨Í¼Ïñ
-		this->grayCodeMat[picIdx].create(this->resRow, this->resLine, CV_8UC1);
-		this->grayCodeMat[picIdx + 1].create(this->resRow, this->resLine, CV_8UC1);
+  // ç»˜åˆ¶æ¯ä¸€ä¸ªå›¾åƒã€‚picIdxä»£è¡¨ç»˜åˆ¶çš„æ˜¯æ ¼é›·ç çš„ç¬¬picIdx / 2ä½ã€‚ä¹Ÿä»£è¡¨ç¬¬å‡ å¹…çŸ©é˜µ
+  for (int picIdx = 0; picIdx < this->numDigit * 2; picIdx += 2) {
+    // åˆ›å»ºå›¾åƒ
+    this->grayCodeMat[picIdx].create(this->resRow, this->resLine, CV_8UC1);
+    this->grayCodeMat[picIdx + 1].create(this->resRow, this->resLine, CV_8UC1);
 
-		// ¼ÆËã¼ä¾à
-		if (lineBased)	// Èç¹ûÊÇ»æÖÆ°´ÁĞµÄÍ¼Ïñ
-		{
-			int space = this->resLine / grayCodeSize;
-			for (int i = 0; i < grayCodeSize; i++)
-			{
-				// ÅĞ¶Ï»æÖÆÑÕÉ«
-				char color = 0;
-				if (this->GetBit(grayCode[i], picIdx / 2 + 1))
-					color = 0xFF;
-				else
-					color = 0;
+    // è®¡ç®—é—´è·
+    if (lineBased)  // å¦‚æœæ˜¯ç»˜åˆ¶æŒ‰åˆ—çš„å›¾åƒ
+    {
+      int space = this->resLine / grayCodeSize;
+      for (int i = 0; i < grayCodeSize; i++) {
+        // åˆ¤æ–­ç»˜åˆ¶é¢œè‰²
+        char color = 0;
+        if (this->GetBit(grayCode[i], picIdx / 2 + 1))
+          color = 0xFF;
+        else
+          color = 0;
 
-				// »æÖÆ
-				for (int l = 0; l < space; l++)
-				{
-					for (int r = 0; r < this->resRow; r++)
-					{
-						this->grayCodeMat[picIdx].at<char>(r, l + i*space) = color;
-					}
-				}
-			}
-		}
-		else
-		{
-			int space = this->resRow / grayCodeSize;
-			for (int i = 0; i < grayCodeSize; i++)
-			{
-				// ÅĞ¶Ï»æÖÆÑÕÉ«
-				char color = 0;
-				if (this->GetBit(grayCode[i], picIdx / 2 + 1))
-					color = 0xFF;
-				else
-					color = 0;
+        // ç»˜åˆ¶
+        for (int l = 0; l < space; l++) {
+          for (int r = 0; r < this->resRow; r++) {
+            this->grayCodeMat[picIdx].at<char>(r, l + i * space) = color;
+          }
+        }
+      }
+    } else {
+      int space = this->resRow / grayCodeSize;
+      for (int i = 0; i < grayCodeSize; i++) {
+        // åˆ¤æ–­ç»˜åˆ¶é¢œè‰²
+        char color = 0;
+        if (this->GetBit(grayCode[i], picIdx / 2 + 1))
+          color = 0xFF;
+        else
+          color = 0;
 
-				// »æÖÆ
-				for (int r = 0; r < space; r++)
-				{
-					for (int l = 0; l < this->resLine; l++)
-					{
-						this->grayCodeMat[picIdx].at<char>(r + i*space, l) = color;
-					}
-				}
-			}
-		}
+        // ç»˜åˆ¶
+        for (int r = 0; r < space; r++) {
+          for (int l = 0; l < this->resLine; l++) {
+            this->grayCodeMat[picIdx].at<char>(r + i * space, l) = color;
+          }
+        }
+      }
+    }
 
-		// ´´½¨·´É«Í¼Ïñ
-		for (int r = 0; r < this->resRow; r++)
-		{
-			for (int l = 0; l < this->resLine; l++)
-			{
-				uchar value = this->grayCodeMat[picIdx].at<uchar>(r, l);
-				if (value == 0xFF)
-					this->grayCodeMat[picIdx + 1].at<uchar>(r, l) = 0;
-				else
-					this->grayCodeMat[picIdx + 1].at<uchar>(r, l) = 0xFF;
-			}
-		}
-	}
+    // åˆ›å»ºåè‰²å›¾åƒ
+    for (int r = 0; r < this->resRow; r++) {
+      for (int l = 0; l < this->resLine; l++) {
+        uchar value = this->grayCodeMat[picIdx].at<uchar>(r, l);
+        if (value == 0xFF)
+          this->grayCodeMat[picIdx + 1].at<uchar>(r, l) = 0;
+        else
+          this->grayCodeMat[picIdx + 1].at<uchar>(r, l) = 0xFF;
+      }
+    }
+  }
 
-	return true;
+  return true;
 }
 
-// Êä³öµ½ÎÄ¼ş
-bool CEncoder_Gray::WriteData()
-{
-	// ´´½¨Â·¾¶
-	string tempPath = this->m_filePath;
-	for (int i = 0; i < tempPath.length(); i++)
-	{
-		if (tempPath[i] == '/')
-			tempPath[i] = '\\';
-	}
-	system((string("mkdir ") + tempPath).c_str());
+// è¾“å‡ºåˆ°æ–‡ä»¶
+bool CEncoder_Gray::WriteData() {
+  // åˆ›å»ºè·¯å¾„
+  string tempPath = this->m_filePath;
+  for (int i = 0; i < tempPath.length(); i++) {
+    if (tempPath[i] == '/') tempPath[i] = '\\';
+  }
+  system((string("mkdir ") + tempPath).c_str());
 
-	// Êä³öÉú³ÉµÄGrayCodeµ½txt
-	std::fstream txtFile;
-	txtFile.open((this->m_filePath + this->m_codeName + this->m_codeEnd).c_str(), ios::out);
-	if (!txtFile)
-		return false;
-	for (int i = 0; i < this->grayCodeSize; i++)
-	{
-		//txtFile << i << '\t' << this->grayCode[i] << std::endl ;
-		txtFile << i << '\t';
-		for (int d = this->numDigit; d > 0; d--)
-		{
-			txtFile << this->GetBit(this->grayCode[i], d);
-		}
-		txtFile << std::endl;
-	}
-	txtFile.close();
+  // è¾“å‡ºç”Ÿæˆçš„GrayCodeåˆ°txt
+  std::fstream txtFile;
+  txtFile.open((this->m_filePath + this->m_codeName + this->m_codeEnd).c_str(),
+               ios::out);
+  if (!txtFile) return false;
+  for (int i = 0; i < this->grayCodeSize; i++) {
+    // txtFile << i << '\t' << this->grayCode[i] << std::endl ;
+    txtFile << i << '\t';
+    for (int d = this->numDigit; d > 0; d--) {
+      txtFile << this->GetBit(this->grayCode[i], d);
+    }
+    txtFile << std::endl;
+  }
+  txtFile.close();
 
-	// Êä³öÉú³ÉµÄGrayCodeMatµ½bmp
-	for (int i = 0; i < this->numDigit * 2; i++)
-	{
-		std::string tempNum;
-		std::strstream ss;
-		ss << numDigit*2 - i - 1;
-		ss >> tempNum;
-		cv::imwrite(this->m_filePath + this->m_matName + tempNum + this->m_matEnd, this->grayCodeMat[i]);
-	}
+  // è¾“å‡ºç”Ÿæˆçš„GrayCodeMatåˆ°bmp
+  for (int i = 0; i < this->numDigit * 2; i++) {
+    std::string tempNum;
+    std::strstream ss;
+    ss << numDigit * 2 - i - 1;
+    ss >> tempNum;
+    cv::imwrite(this->m_filePath + this->m_matName + tempNum + this->m_matEnd,
+                this->grayCodeMat[i]);
+  }
 
-	return true;
+  return true;
 }
 
-// ¿ªÊ¼¹¹½¨GrayCode¡£ĞèÒª´«Èë¾ßÌåµÄÎ»Êı
-bool CEncoder_Gray::Encode(int numDigit, bool lineBased)
-{
-	// È·±£²ÎÊıºÏ·¨
-	if ((numDigit <= 0) || (numDigit > 16))
-		return false;
-	this->numDigit = numDigit;
-	this->grayCodeSize = (int)1 << (this->numDigit); // 1 << 6 = 64  1 << 5 = 32
-	this->lineBased = lineBased; // true: ÁĞÌõÎÆ false£ºĞĞÌõÎÆ
+// å¼€å§‹æ„å»ºGrayCodeã€‚éœ€è¦ä¼ å…¥å…·ä½“çš„ä½æ•°
+bool CEncoder_Gray::Encode(int numDigit, bool lineBased) {
+  // ç¡®ä¿å‚æ•°åˆæ³•
+  if ((numDigit <= 0) || (numDigit > 16)) return false;
+  this->numDigit = numDigit;
+  this->grayCodeSize = (int)1 << (this->numDigit);  // 1 << 6 = 64  1 << 5 = 32
+  this->lineBased = lineBased;  // true: åˆ—æ¡çº¹ falseï¼šè¡Œæ¡çº¹
 
-	// ¿ªÊ¼ÔËËã
-	if (!this->EncodeGray())
-		return false;
-	if (!this->DrawMat())
-		return false;
+  // å¼€å§‹è¿ç®—
+  if (!this->EncodeGray()) return false;
+  if (!this->DrawMat()) return false;
 
-	// Êä³öµ½ÎÄ¼ş
-	if (!this->WriteData())
-		return false;
+  // è¾“å‡ºåˆ°æ–‡ä»¶
+  if (!this->WriteData()) return false;
 
-	return true;
+  return true;
 }
 
-// Éè¶¨´æ´¢¸ñÀ×ÂëÊı¾İµÄÎÄ¼şÃû
-bool CEncoder_Gray::SetCodeFileName(string codeName, string codeEnd)
-{
-	this->m_codeName = codeName;
-	this->m_codeEnd = codeEnd;
-	return true;
+// è®¾å®šå­˜å‚¨æ ¼é›·ç æ•°æ®çš„æ–‡ä»¶å
+bool CEncoder_Gray::SetCodeFileName(string codeName, string codeEnd) {
+  this->m_codeName = codeName;
+  this->m_codeEnd = codeEnd;
+  return true;
 }
 
-// Éè¶¨´æ´¢¸ñÀ×ÂëÍ¼°¸µÄÎÄ¼şÃû
-bool CEncoder_Gray::SetMatFileName(string filePath, string matName, string matEnd)
-{
-	this->m_filePath = filePath;
-	this->m_matName = matName;
-	this->m_matEnd = matEnd;
-	return true;
+// è®¾å®šå­˜å‚¨æ ¼é›·ç å›¾æ¡ˆçš„æ–‡ä»¶å
+bool CEncoder_Gray::SetMatFileName(string filePath, string matName,
+                                   string matEnd) {
+  this->m_filePath = filePath;
+  this->m_matName = matName;
+  this->m_matEnd = matEnd;
+  return true;
 }
 
-// ¿ÉÊÓ»¯
-void CEncoder_Gray::Visualization()
-{
-	for (int i = 0; i < this->grayCodeSize; i++)
-	{
-		for (int d = this->numDigit; d > 0; d--)
-		{
-			std::cout << this->GetBit(this->grayCode[i], d);
-		}
-		std::cout << std::endl;
-	}
+// å¯è§†åŒ–
+void CEncoder_Gray::Visualization() {
+  for (int i = 0; i < this->grayCodeSize; i++) {
+    for (int d = this->numDigit; d > 0; d--) {
+      std::cout << this->GetBit(this->grayCode[i], d);
+    }
+    std::cout << std::endl;
+  }
 
 #ifdef VISUAL
-	cv::namedWindow(this->m_matName);
-	for (int i = 0; i < this->numDigit * 2; i++)
-	{
-		std::cout << "Now present: " << i << std::endl;
-		imshow(this->m_matName, this->grayCodeMat[i]);
-		cv::waitKey(300);
-	}
-	cv::destroyWindow(this->m_matName);
+  cv::namedWindow(this->m_matName);
+  for (int i = 0; i < this->numDigit * 2; i++) {
+    std::cout << "Now present: " << i << std::endl;
+    imshow(this->m_matName, this->grayCodeMat[i]);
+    cv::waitKey(300);
+  }
+  cv::destroyWindow(this->m_matName);
 #endif
 }
 
-
+#endif
