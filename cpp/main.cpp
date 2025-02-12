@@ -1,8 +1,6 @@
 #include "head.h"
 
 int main() {
-  return 0;
-#if 1
   // 格雷码进行编码
   CEncoder_Gray EGray_v, EGray_h;
   EGray_v.SetCodeFileName("vGrayCode", ".txt");
@@ -21,7 +19,7 @@ int main() {
   // PhaseShifting进行编码
   CEncoder_Phase EPS_v, EPS_h;
   EPS_v.SetMatFileName("Projector/", "vPhase", ".bmp");
-  if (!EPS_v.Encode(PROJECTOR_RESLINE / 70, true))  // 周期数32
+  if (!EPS_v.Encode(WidthProject / 70, true))  // 周期数32
     printf("vPhase Encode failed.\n");
   EPS_v.Visualization();
 
@@ -50,5 +48,4 @@ int main() {
           printf("vPhase Encode failed.\n");
   EPS_v.Visualization();
   */
-#endif
 }
